@@ -48,12 +48,12 @@
       <nav style="display:flex;align-items:center;gap:clamp(22px,2.6vw,40px);">
         <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ homeColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Home</button>
         <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ aboutColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Über uns</button>
-        <button onClick="{{ goTermin }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:13px 24px;font:500 12.5px/1 Inter;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+        <button onClick="{{ goBooking }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:13px 24px;font:500 12.5px/1 Inter;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
       </nav>
     </sc-if>
     <sc-if value="{{ isMobile }}">
       <div style="display:flex;align-items:center;gap:12px;">
-        <button onClick="{{ goTermin }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:11px 18px;font:500 11.5px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin</button>
+        <button onClick="{{ goBooking }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:11px 18px;font:500 11.5px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin</button>
         <button onClick="{{ toggleMenu }}" aria-label="Menü öffnen" style="background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:6px;">
           <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
           <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
@@ -67,7 +67,7 @@
       <button onClick="{{ closeMenu }}" style="position:absolute;top:22px;right:26px;background:none;border:none;color:#8d9097;font:500 12px Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Schliessen ✕</button>
       <button onClick="{{ goHome }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Home</button>
       <button onClick="{{ goAbout }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Über uns</button>
-      <button onClick="{{ goTermin }}" style="margin-top:18px;align-self:flex-start;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:16px 32px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin anfragen</button>
+      <button onClick="{{ goBooking }}" style="margin-top:18px;align-self:flex-start;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:16px 32px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin anfragen</button>
     </div>
   </sc-if>
 
@@ -84,7 +84,7 @@
             </div>
             <h1 style="margin:0;font:300 clamp(2.9rem,8.4vw,7rem)/1.0 Jost;letter-spacing:0.005em;color:#f1f0ee;text-wrap:balance;">Perfektion bis<br>ins Detail.</h1>
             <p style="margin:30px 0 0;max-width:500px;font:400 clamp(1.05rem,1.55vw,1.22rem)/1.65 Inter;color:#b4b6bc;">Arventi bringt deinen Wagen zurück in den Zustand, den du zuletzt im Showroom gesehen hast — Lack, Leder und jedes Detail. Ruhig, gründlich, kompromisslos.</p>
-            <button onClick="{{ goTermin }}" style="margin-top:38px;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+            <button onClick="{{ goBooking }}" style="margin-top:38px;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
           </div>
           <div style="position:absolute;left:50%;bottom:clamp(24px,5vh,46px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:#7a7d84;font:600 11px/1 Inter;letter-spacing:0.18em;text-transform:uppercase;">
             <span>Scrollen für den Ablauf</span>
@@ -165,7 +165,7 @@
           <div style="max-width:860px;background:radial-gradient(120% 130% at 50% 50%,rgba(11,12,14,0.9),rgba(11,12,14,0) 76%);padding:30px 10px;">
             <h2 style="margin:0;font:300 clamp(2.4rem,7vw,5.2rem)/1.02 Jost;letter-spacing:0.01em;color:#f1f0ee;text-wrap:balance;">Dein Auto hat<br>das verdient.</h2>
             <p style="margin:26px auto 0;max-width:520px;font:400 clamp(1.05rem,1.6vw,1.24rem)/1.65 Inter;color:#b4b6bc;">Erzähl mir in zwei Sätzen, worum es geht. Ich melde mich innerhalb von 24 Stunden mit einem konkreten Vorschlag.</p>
-            <button onClick="{{ goTermin }}" style="margin-top:40px;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:18px 42px;font:500 15px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Jetzt Termin anfragen</button>
+            <button onClick="{{ goBooking }}" style="margin-top:40px;background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:18px 42px;font:500 15px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Jetzt Termin anfragen</button>
           </div>
         </section>
 
@@ -173,7 +173,7 @@
     </sc-if>
 
     <sc-if value="{{ isAbout }}">
-      <div data-screen-label="Über uns" data-comment-anchor="about" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+      <div data-screen-label="About" data-comment-anchor="about" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
         <div style="max-width:1100px;margin:0 auto;">
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
             <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#e8404a);">Über Arventi</span>
@@ -226,14 +226,14 @@
           </div>
 
           <div style="margin-top:clamp(60px,8vw,100px);">
-            <button onClick="{{ goTermin }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+            <button onClick="{{ goBooking }}" style="background:var(--ac,#e8404a);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
           </div>
         </div>
       </div>
     </sc-if>
 
-    <sc-if value="{{ isTermin }}">
-      <div data-screen-label="Termin anfragen" data-comment-anchor="termin" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+    <sc-if value="{{ isBooking }}">
+      <div data-screen-label="Booking Request" data-comment-anchor="booking" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
         <div style="max-width:720px;margin:0 auto;">
 
           <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
@@ -900,7 +900,7 @@ class Component extends DCLogic {
 
   goHome = () => this.go('home');
   goAbout = () => this.go('about');
-  goTermin = () => this.go('termin');
+  goBooking = () => this.go('booking');
   toggleMenu = () => this.setState(st => {
     const o = !st.menuOpen;
     try { document.body.style.overflow = o ? 'hidden' : ''; } catch (e) {}
@@ -961,7 +961,7 @@ class Component extends DCLogic {
       isMobile: this.state.isMobile, notMobile: !this.state.isMobile,
       homeColor: v === 'home' ? '#f1f0ee' : '#8d9097',
       aboutColor: v === 'about' ? '#f1f0ee' : '#8d9097',
-      isHome: v === 'home', isAbout: v === 'about', isTermin: v === 'termin',
+      isHome: v === 'home', isAbout: v === 'about', isBooking: v === 'booking',
       menuOpen: this.state.menuOpen,
       legalOpen: !!this.state.legal,
       legalImpressum: this.state.legal === 'impressum',
@@ -971,7 +971,7 @@ class Component extends DCLogic {
       canvasRef: this.canvasRef, finalRef: this.finalRef,
       step0: this.stepRefs[0], step1: this.stepRefs[1], step2: this.stepRefs[2],
       step3: this.stepRefs[3], step4: this.stepRefs[4], step5: this.stepRefs[5],
-      goHome: this.goHome, goAbout: this.goAbout, goTermin: this.goTermin,
+      goHome: this.goHome, goAbout: this.goAbout, goBooking: this.goBooking,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
       openImpressum: this.openImpressum, openDatenschutz: this.openDatenschutz,
       closeLegal: this.closeLegal, stop: this.stop,
