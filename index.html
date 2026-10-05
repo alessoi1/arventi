@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arventi · Auto Detailing Winterthur</title>
+<meta name="description" content="Arventi — Auto Detailing in Winterthur. Aussen- und Innenreinigung mit Handwäsche, Politur und Versiegelung.">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -90,13 +92,10 @@
               <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;">
                 <button onClick="{{ goBooking }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
                 <button onClick="{{ enterExplorer }}" style="display:inline-flex;align-items:center;gap:13px;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:16px 26px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:var(--ac,#b5892e);">
-                  <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font-size:8px;padding-left:2px;">▶</span>
+                  <span style="display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ac,#b5892e);flex:none;"><svg width="9" height="11" viewBox="0 0 9 11" fill="none" aria-hidden="true" style="margin-left:1px;"><path d="M0 0.5 L9 5.5 L0 10.5 Z" fill="var(--ink,#ffffff)"></path></svg></span>
                   Reinigung ansehen
                 </button>
               </div>
-            </div>
-            <div style="position:absolute;left:50%;bottom:clamp(24px,5vh,46px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;color:#7a7d84;font:600 11px/1 Inter;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;">
-              <span style="width:28px;height:1px;background:#3a3c42;"></span>Dein Auto im 3D-Showroom
             </div>
           </section>
         </sc-if>
@@ -133,6 +132,7 @@
               </div>
             </div>
 
+            <sc-if value="{{ notMobile }}" hint-placeholder-val="{{ true }}">
             <div key="{{ stepN }}" style="position:absolute;left:clamp(14px,5vw,56px);bottom:clamp(16px,5vh,52px);width:min(380px,calc(100vw - 28px));z-index:12;background:rgba(16,17,20,0.82);backdrop-filter:blur(13px);border:1px solid rgba(241,240,238,0.1);border-radius:7px;padding:clamp(20px,2.5vw,26px);animation:arvCard .35s ease both;">
               <div style="display:flex;align-items:center;gap:13px;margin-bottom:13px;">
                 <span style="font:400 clamp(2rem,3.2vw,2.7rem)/0.9 Jost;color:var(--ac,#b5892e);">{{ stepN }}</span>
@@ -150,6 +150,36 @@
             <div style="position:absolute;bottom:clamp(16px,5vh,52px);right:clamp(16px,5vw,56px);z-index:12;display:flex;align-items:center;gap:9px;font:600 10px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#6b6e74;pointer-events:none;">
               <span style="font-size:14px;">⟲</span>Ziehen zum Drehen
             </div>
+            </sc-if>
+
+            <sc-if value="{{ isMobile }}">
+            <div style="position:absolute;left:10px;right:10px;bottom:12px;z-index:12;background:rgba(16,17,20,0.93);backdrop-filter:blur(13px);border:1px solid rgba(241,240,238,0.12);border-radius:11px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,0.4);">
+              <div style="display:flex;align-items:center;gap:9px;padding:11px 12px;">
+                <button onClick="{{ toggleCard }}" aria-label="Schrittinfo ein- oder ausklappen" style="flex:1;min-width:0;display:flex;align-items:center;gap:11px;background:none;border:none;text-align:left;padding:0;cursor:pointer;">
+                  <span style="font:400 2rem/0.9 Jost;color:var(--ac,#b5892e);flex:none;">{{ stepN }}</span>
+                  <span style="flex:1;min-width:0;">
+                    <span style="display:block;font:600 8.5px/1.2 Inter;letter-spacing:0.2em;text-transform:uppercase;color:#8d9097;">Schritt {{ stepN }} · {{ stepTag }}</span>
+                    <span style="display:block;margin-top:3px;font:300 1.2rem/1.1 Jost;color:#f1f0ee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ stepTitle }}</span>
+                  </span>
+                </button>
+                <button onClick="{{ prevStep }}" aria-label="Vorheriger Schritt" style="flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:none;border:1px solid rgba(241,240,238,0.2);color:#f1f0ee;font-size:15px;cursor:pointer;">←</button>
+                <button onClick="{{ nextStep }}" aria-label="Nächster Schritt" style="flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:none;border:1px solid rgba(241,240,238,0.2);color:#f1f0ee;font-size:15px;cursor:pointer;">→</button>
+                <button onClick="{{ toggleCard }}" aria-label="Schrittinfo ein- oder ausklappen" style="flex:none;display:inline-flex;align-items:center;justify-content:center;width:28px;height:36px;background:none;border:none;color:#8d9097;cursor:pointer;"><span style="display:inline-block;font-size:15px;line-height:1;transition:transform .25s;transform:rotate({{ cardChevron }});">⌄</span></button>
+              </div>
+              <sc-if value="{{ cardOpen }}">
+                <div style="padding:1px 14px 14px;">
+                  <p style="margin:0 0 14px;font:400 0.96rem/1.6 Inter;color:#b4b6bc;">{{ stepDesc }}</p>
+                  <button onClick="{{ exitExplorer }}" style="width:100%;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:12px 20px;font:500 12px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Schliessen ✕</button>
+                </div>
+              </sc-if>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ mobileHintShow }}">
+            <div style="position:absolute;bottom:78px;right:14px;z-index:11;display:flex;align-items:center;gap:8px;font:600 10px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#6b6e74;pointer-events:none;">
+              <span style="font-size:14px;">⟲</span>Ziehen zum Drehen
+            </div>
+            </sc-if>
           </div>
         </sc-if>
 
@@ -407,6 +437,7 @@ class Component extends DCLogic {
     view: 'home',
     mode: 'landing',
     activeStep: 0,
+    cardOpen: true,
     isMobile: (typeof window !== 'undefined' && window.innerWidth < 760),
     menuOpen: false,
     legal: null,
@@ -426,7 +457,7 @@ class Component extends DCLogic {
     { n:'04', tag:'Kontrolle', title:'Sauberer als zuvor',     desc:'Unter Prüflicht geht jede Fläche ein letztes Mal durch unsere Hände.' },
     { n:'05', tag:'Übergabe',  title:'Schlüssel zurück',       desc:'Erst wenn alles sitzt, übergeben wir — mit einem Fahrzeug, das sich wieder wie deins anfühlt.' }
   ];
-  modelForStep = ['glb','glbWash','glbOpen','glb','glb'];
+  modelForStep = ['glbDirty','glbWash','glbOpen','glb','glb'];
   camLanding = { az:-0.7, el:0.17, dist:9.4, ty:-0.05 };
   stepCam = [
     { az:1.05, el:0.10, dist:7.4, ty:-0.05 },
@@ -448,7 +479,7 @@ class Component extends DCLogic {
     this.t0 = performance.now(); this.last = this.t0; this._tries = 0;
     this.cam = Object.assign({}, this.camLanding);
     this.camTarget = Object.assign({}, this.camLanding);
-    this.mo = { glb:1, glbOpen:0, glbWash:0 }; this.vs = (window.innerWidth >= 760) ? 0.2 : 0;
+    this.mo = { glb:1, glbOpen:0, glbWash:0, glbDirty:0 }; this.vs = (window.innerWidth >= 760) ? 0.2 : 0;
     this.dragging = false;
     this._onResize = () => { this.handleResize(); const m = window.innerWidth < 760; if (m !== this.state.isMobile) this.setState({ isMobile: m }); };
     this._onMove = (e) => this.onDragMove(e);
@@ -564,7 +595,7 @@ class Component extends DCLogic {
     const pmat = new THREE.PointsMaterial({ size: 0.05, map: tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.28, sizeAttenuation: true });
     pmat.color.copy(this.c0).lerp(this.c1, 0.45);
 
-    this.three = { THREE, scene, cam, renderer, group, key, pmat, points: null, p: null, glb: null, glbOpen: null, glbWash: null };
+    this.three = { THREE, scene, cam, renderer, group, key, pmat, points: null, p: null, glb: null, glbOpen: null, glbWash: null, glbDirty: null };
     this.buildParticles(this.densityN());
     this.handleResize();
 
@@ -579,7 +610,7 @@ class Component extends DCLogic {
       this.three.group.add(m); this.three[key] = m;
       if (this.reduced || this.state.view !== 'home') this.renderOnce();
     }, undefined, (e) => console.warn('GLB load failed', e));
-    if (THREE.GLTFLoader) { loadCar('assets/car.glb', Math.PI / 2, 'glb'); loadCar('assets/car-open.glb', 0, 'glbOpen'); loadCar('assets/car-wash.glb', Math.PI / 2, 'glbWash'); }
+    if (THREE.GLTFLoader) { loadCar('assets/car.glb', Math.PI / 2, 'glb'); loadCar('assets/car-open.glb', Math.PI, 'glbOpen'); loadCar('assets/car-wash.glb', Math.PI / 2, 'glbWash'); loadCar('assets/car-dirty.glb', -Math.PI / 2, 'glbDirty'); }
 
     this.raf = requestAnimationFrame(this.animate);
   }
@@ -613,7 +644,7 @@ class Component extends DCLogic {
     T.group.rotation.y += (swTgt - T.group.rotation.y) * 0.08;
 
     const tgtKey = landing ? 'glb' : this.modelForStep[this.state.activeStep];
-    ['glb','glbOpen','glbWash'].forEach(k => {
+    ['glb','glbOpen','glbWash','glbDirty'].forEach(k => {
       const m = T[k], mt = T[k + 'Mat']; if (!m || !mt) return;
       const tv = k === tgtKey ? 1 : 0;
       this.mo[k] += (tv - this.mo[k]) * (this.reduced ? 1 : 0.14);
@@ -731,6 +762,8 @@ class Component extends DCLogic {
     this.camTarget.el = Math.max(-0.05, Math.min(0.9, this.camTarget.el + dy * 0.006));
   }
 
+  toggleCard = () => this.setState(st => ({ cardOpen: !st.cardOpen }));
+
   toggleMenu = () => this.setState(st => {
     const o = !st.menuOpen;
     try { document.body.style.overflow = o ? 'hidden' : ''; } catch (e) {}
@@ -793,6 +826,8 @@ class Component extends DCLogic {
       isLanding: this.state.mode === 'landing', isExplorer: this.state.mode === 'explorer',
       showChrome: !(v === 'home' && this.state.mode === 'explorer'),
       stepN: st.n, stepTag: st.tag, stepTitle: st.title, stepDesc: st.desc,
+      cardOpen: this.state.cardOpen, cardChevron: this.state.cardOpen ? '180deg' : '0deg',
+      mobileHintShow: this.state.isMobile && !this.state.cardOpen,
       menuOpen: this.state.menuOpen,
       legalOpen: !!this.state.legal,
       legalImpressum: this.state.legal === 'impressum',
@@ -803,6 +838,7 @@ class Component extends DCLogic {
       hs0: this.hsRefs[0], hs1: this.hsRefs[1], hs2: this.hsRefs[2], hs3: this.hsRefs[3], hs4: this.hsRefs[4],
       sel0: this.sel0, sel1: this.sel1, sel2: this.sel2, sel3: this.sel3, sel4: this.sel4,
       enterExplorer: this.enterExplorer, exitExplorer: this.exitExplorer, prevStep: this.prevStep, nextStep: this.nextStep,
+      toggleCard: this.toggleCard,
       onDragStart: this.onDragStart,
       goHome: this.goHome, goAbout: this.goAbout, goBooking: this.goBooking,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
