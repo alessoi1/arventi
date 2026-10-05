@@ -47,14 +47,14 @@
     <sc-if value="{{ notMobile }}" hint-placeholder-val="{{ true }}">
       <nav style="display:flex;align-items:center;gap:clamp(22px,2.6vw,40px);">
         <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ homeColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Home</button>
-        <button onClick="{{ goPreise }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ preiseColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Preismodelle</button>
+        <button onClick="{{ goPricing }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ pricingColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Preismodelle</button>
         <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ aboutColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Über uns</button>
-        <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:13px 24px;font:500 12.5px/1 Inter;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+        <button onClick="{{ goBooking }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:13px 24px;font:500 12.5px/1 Inter;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
       </nav>
     </sc-if>
     <sc-if value="{{ isMobile }}">
       <div style="display:flex;align-items:center;gap:12px;">
-        <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:11px 18px;font:500 11.5px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin</button>
+        <button onClick="{{ goBooking }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:11px 18px;font:500 11.5px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin</button>
         <button onClick="{{ toggleMenu }}" aria-label="Menü öffnen" style="background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:6px;">
           <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
           <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
@@ -67,9 +67,9 @@
     <div style="position:fixed;inset:0;z-index:60;background:rgba(11,12,14,0.985);display:flex;flex-direction:column;justify-content:center;gap:26px;padding:48px 36px;">
       <button onClick="{{ closeMenu }}" style="position:absolute;top:22px;right:26px;background:none;border:none;color:#8d9097;font:500 12px Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Schliessen ✕</button>
       <button onClick="{{ goHome }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Home</button>
-      <button onClick="{{ goPreise }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Preismodelle</button>
+      <button onClick="{{ goPricing }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Preismodelle</button>
       <button onClick="{{ goAbout }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Über uns</button>
-      <button onClick="{{ goTermin }}" style="margin-top:18px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:16px 32px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin anfragen</button>
+      <button onClick="{{ goBooking }}" style="margin-top:18px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:16px 32px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin anfragen</button>
     </div>
   </sc-if>
 
@@ -88,7 +88,7 @@
               <h1 style="margin:0;font:300 clamp(2.9rem,8.4vw,7rem)/1.0 Jost;letter-spacing:0.005em;color:#f1f0ee;text-wrap:balance;">Perfektion bis<br>ins Detail.</h1>
               <p style="margin:30px 0 0;max-width:500px;font:400 clamp(1.05rem,1.55vw,1.22rem)/1.65 Inter;color:#b4b6bc;">Arventi bringt deinen Wagen zurück in den Zustand, den du zuletzt im Showroom gesehen hast — Lack, Leder und jedes Detail. Ruhig, gründlich, kompromisslos.</p>
               <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;">
-                <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+                <button onClick="{{ goBooking }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
                 <button onClick="{{ enterExplorer }}" style="display:inline-flex;align-items:center;gap:13px;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:16px 26px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:var(--ac,#b5892e);">
                   <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font-size:8px;padding-left:2px;">▶</span>
                   Reinigung ansehen
@@ -156,8 +156,8 @@
       </div>
     </sc-if>
 
-    <sc-if value="{{ isPreise }}">
-      <div data-screen-label="Preismodelle" data-comment-anchor="preise" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+    <sc-if value="{{ isPricing }}">
+      <div data-screen-label="Pricing" data-comment-anchor="pricing" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
         <div style="max-width:1180px;margin:0 auto;">
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
             <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Preismodelle</span>
@@ -172,7 +172,7 @@
               <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Lack, Felgen und Glas — von Hand gewaschen und poliert.</p>
               <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">190</span></div>
               <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Handwäsche mit Schaum</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Lackreinigung &amp; Politur</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Felgen, Reifen &amp; Scheiben</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Versiegelung</span></li></ul>
-              <button onClick="{{ pickA }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
+              <button onClick="{{ pickExterior }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
             </div>
             <div style="flex:1 1 280px;min-width:0;border-top:1px solid rgba(241,240,238,0.18);padding-top:28px;display:flex;flex-direction:column;">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font:600 11px/1 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;"><span>02</span></div>
@@ -180,14 +180,14 @@
               <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Tiefenreinigung und Pflege für Leder, Stoff und jede Fuge.</p>
               <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">220</span></div>
               <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Staubsaugen &amp; Tiefenreinigung</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Leder- und Stoffpflege</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Kunststoff, Fugen &amp; Scheiben innen</span></li></ul>
-              <button onClick="{{ pickI }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
+              <button onClick="{{ pickInterior }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
             </div><div style="flex:1 1 280px;min-width:0;border-top:2px solid var(--ac,#b5892e);padding-top:28px;display:flex;flex-direction:column;">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font:600 11px/1 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;"><span>03</span><span style="color:var(--ac,#b5892e);">Empfohlen</span></div>
               <h3 style="margin:16px 0 0;font:300 clamp(1.7rem,3vw,2.2rem)/1.05 Jost;letter-spacing:0.01em;color:#f1f0ee;">Komplett</h3>
               <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Innen und aussen in einem Termin — mit Kontrolle und Übergabe.</p>
               <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">380</span></div>
               <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Alles aus Aussen- und Innenreinigung</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Kontrolle unter Prüflicht</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Persönliche Übergabe</span></li></ul>
-              <button onClick="{{ pickK }}" style="margin-top:36px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="filter:brightness(1.08);">Anfragen</button>
+              <button onClick="{{ pickComplete }}" style="margin-top:36px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="filter:brightness(1.08);">Anfragen</button>
             </div>
             
           </div>
@@ -197,7 +197,7 @@
     </sc-if>
 
     <sc-if value="{{ isAbout }}">
-      <div data-screen-label="Über uns" data-comment-anchor="about" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+      <div data-screen-label="About" data-comment-anchor="about" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
         <div style="max-width:1100px;margin:0 auto;">
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
             <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Über Arventi</span>
@@ -250,14 +250,14 @@
           </div>
 
           <div style="margin-top:clamp(60px,8vw,100px);">
-            <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+            <button onClick="{{ goBooking }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
           </div>
         </div>
       </div>
     </sc-if>
 
-    <sc-if value="{{ isTermin }}">
-      <div data-screen-label="Termin anfragen" data-comment-anchor="termin" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+    <sc-if value="{{ isBooking }}">
+      <div data-screen-label="Booking Request" data-comment-anchor="booking" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
         <div style="max-width:720px;margin:0 auto;">
 
           <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
@@ -299,7 +299,7 @@
                       <option value="Beratung / noch unsicher">Beratung / noch unsicher</option>
                     </select>
                     <sc-if value="{{ errService }}"><span style="display:block;margin-top:8px;font:400 13px Inter;color:#ff7a72;">{{ errService }}</span></sc-if>
-                    <button type="button" onClick="{{ goPreise }}" style="margin-top:10px;background:none;border:none;padding:0;color:var(--ac,#b5892e);font:500 13px Inter;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Preismodelle ansehen →</button>
+                    <button type="button" onClick="{{ goPricing }}" style="margin-top:10px;background:none;border:none;padding:0;color:var(--ac,#b5892e);font:500 13px Inter;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Preismodelle ansehen →</button>
                   </label>
                 </div>
 
@@ -701,12 +701,12 @@ class Component extends DCLogic {
   }
   goHome = () => { this.setState({ mode: 'landing', activeStep: 0 }); this.camTarget = Object.assign({}, this.camLanding); this.go('home'); };
   goAbout = () => this.go('about');
-  goTermin = () => this.go('termin');
-  goPreise = () => this.go('preise');
-  pickPlan(v) { this.setState(st => ({ form: Object.assign({}, st.form, { service: v }), errors: Object.assign({}, st.errors, { service: '' }) })); this.go('termin'); }
-  pickA = () => this.pickPlan('Aussenreinigung');
-  pickI = () => this.pickPlan('Innenreinigung');
-  pickK = () => this.pickPlan('Komplett (innen + aussen)');
+  goBooking = () => this.go('booking');
+  goPricing = () => this.go('pricing');
+  pickPlan(v) { this.setState(st => ({ form: Object.assign({}, st.form, { service: v }), errors: Object.assign({}, st.errors, { service: '' }) })); this.go('booking'); }
+  pickExterior = () => this.pickPlan('Aussenreinigung');
+  pickInterior = () => this.pickPlan('Innenreinigung');
+  pickComplete = () => this.pickPlan('Komplett (innen + aussen)');
 
   enterExplorer = () => { try { document.body.style.overflow = 'hidden'; } catch (e) {} this.setState({ mode: 'explorer', activeStep: 0 }); this.camTarget = Object.assign({}, this.stepCam[0]); this.last = performance.now(); if (this.reduced) setTimeout(() => this.renderOnce(), 40); };
   exitExplorer = () => { try { document.body.style.overflow = ''; } catch (e) {} this.setState({ mode: 'landing', activeStep: 0 }); this.camTarget = Object.assign({}, this.camLanding); if (this.reduced) setTimeout(() => this.renderOnce(), 40); };
@@ -787,9 +787,9 @@ class Component extends DCLogic {
       isMobile: this.state.isMobile, notMobile: !this.state.isMobile,
       homeColor: v === 'home' ? '#f1f0ee' : '#8d9097',
       aboutColor: v === 'about' ? '#f1f0ee' : '#8d9097',
-      isPreise: v === 'preise', preiseColor: v === 'preise' ? '#f1f0ee' : '#8d9097',
-      pickA: this.pickA, pickI: this.pickI, pickK: this.pickK, goPreise: this.goPreise,
-      isHome: v === 'home', isAbout: v === 'about', isTermin: v === 'termin',
+      isPricing: v === 'pricing', pricingColor: v === 'pricing' ? '#f1f0ee' : '#8d9097',
+      pickExterior: this.pickExterior, pickInterior: this.pickInterior, pickComplete: this.pickComplete, goPricing: this.goPricing,
+      isHome: v === 'home', isAbout: v === 'about', isBooking: v === 'booking',
       isLanding: this.state.mode === 'landing', isExplorer: this.state.mode === 'explorer',
       showChrome: !(v === 'home' && this.state.mode === 'explorer'),
       stepN: st.n, stepTag: st.tag, stepTitle: st.title, stepDesc: st.desc,
@@ -804,7 +804,7 @@ class Component extends DCLogic {
       sel0: this.sel0, sel1: this.sel1, sel2: this.sel2, sel3: this.sel3, sel4: this.sel4,
       enterExplorer: this.enterExplorer, exitExplorer: this.exitExplorer, prevStep: this.prevStep, nextStep: this.nextStep,
       onDragStart: this.onDragStart,
-      goHome: this.goHome, goAbout: this.goAbout, goTermin: this.goTermin,
+      goHome: this.goHome, goAbout: this.goAbout, goBooking: this.goBooking,
       toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
       openImpressum: this.openImpressum, openDatenschutz: this.openDatenschutz,
       closeLegal: this.closeLegal, stop: this.stop,
