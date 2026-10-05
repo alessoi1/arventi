@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0b0c0e;color:#f1f0ee;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+  *{box-sizing:border-box}
+  a{color:var(--ac,#b5892e);text-decoration:none}
+  a:hover{color:#f1f0ee}
+  ::selection{background:#b5892e;color:#fff}
+  input,select,textarea{font-family:inherit}
+  select option{background:#16171a;color:#f1f0ee}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#15161a}
+  ::-webkit-scrollbar-thumb{background:#3a3c42;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#4a4d55}
+  @keyframes arvFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes arvCard{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</helmet>
+<div style="--ac:{{ accent }};--ink:{{ ink }};position:relative;min-height:100vh;">
+
+  <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block;background:#0b0c0e;"></canvas>
+
+  <div style="position:fixed;top:0;left:0;right:0;height:5px;background:var(--ac,#b5892e);z-index:55;"></div>
+  <div style="position:fixed;top:0;left:0;right:0;height:120px;z-index:20;pointer-events:none;background:linear-gradient(180deg,rgba(11,12,14,0.9),rgba(11,12,14,0));"></div>
+
+  <header style="position:fixed;top:5px;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:clamp(14px,2vw,22px) clamp(18px,4.5vw,56px);">
+    <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;padding:0;text-align:left;">
+      <span style="display:block;font:300 clamp(17px,1.6vw,20px)/1 Jost,sans-serif;letter-spacing:0.3em;color:#f1f0ee;padding-left:0.3em;">ARVENTI</span>
+      <span style="display:block;font:500 8px/1 Inter,sans-serif;letter-spacing:0.4em;color:var(--ac,#b5892e);margin-top:5px;padding-left:0.4em;">AUTO DETAILING</span>
+    </button>
+    <sc-if value="{{ notMobile }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;align-items:center;gap:clamp(22px,2.6vw,40px);">
+        <button onClick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ homeColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Home</button>
+        <button onClick="{{ goPreise }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ preiseColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Preismodelle</button>
+        <button onClick="{{ goAbout }}" style="background:none;border:none;cursor:pointer;font:500 12.5px/1 Inter;letter-spacing:0.14em;text-transform:uppercase;color:{{ aboutColor }};transition:color .2s;" style-hover="color:#f1f0ee;">Über uns</button>
+        <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:13px 24px;font:500 12.5px/1 Inter;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ isMobile }}">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:11px 18px;font:500 11.5px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin</button>
+        <button onClick="{{ toggleMenu }}" aria-label="Menü öffnen" style="background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:6px;">
+          <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
+          <span style="display:block;width:26px;height:2px;background:#f1f0ee;border-radius:2px;"></span>
+        </button>
+      </div>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ menuOpen }}">
+    <div style="position:fixed;inset:0;z-index:60;background:rgba(11,12,14,0.985);display:flex;flex-direction:column;justify-content:center;gap:26px;padding:48px 36px;">
+      <button onClick="{{ closeMenu }}" style="position:absolute;top:22px;right:26px;background:none;border:none;color:#8d9097;font:500 12px Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Schliessen ✕</button>
+      <button onClick="{{ goHome }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Home</button>
+      <button onClick="{{ goPreise }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Preismodelle</button>
+      <button onClick="{{ goAbout }}" style="background:none;border:none;text-align:left;cursor:pointer;font:300 clamp(34px,11vw,52px)/1 Jost;letter-spacing:0.02em;color:#f1f0ee;">Über uns</button>
+      <button onClick="{{ goTermin }}" style="margin-top:18px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:16px 32px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Termin anfragen</button>
+    </div>
+  </sc-if>
+
+  <main style="position:relative;z-index:1;">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" data-comment-anchor="home">
+
+        <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+          <section data-screen-label="Home – Start" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(20px,6vw,90px);position:relative;">
+            <div style="max-width:730px;background:radial-gradient(130% 150% at 18% 48%,rgba(11,12,14,0.74),rgba(11,12,14,0) 66%);padding:20px 0;">
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
+                <span style="font:600 clamp(11px,1.3vw,13px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Auto Detailing · Winterthur</span>
+                <span style="height:1px;width:clamp(30px,5vw,56px);background:var(--ac,#b5892e);opacity:0.6;"></span>
+              </div>
+              <h1 style="margin:0;font:300 clamp(2.9rem,8.4vw,7rem)/1.0 Jost;letter-spacing:0.005em;color:#f1f0ee;text-wrap:balance;">Perfektion bis<br>ins Detail.</h1>
+              <p style="margin:30px 0 0;max-width:500px;font:400 clamp(1.05rem,1.55vw,1.22rem)/1.65 Inter;color:#b4b6bc;">Arventi bringt deinen Wagen zurück in den Zustand, den du zuletzt im Showroom gesehen hast — Lack, Leder und jedes Detail. Ruhig, gründlich, kompromisslos.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;">
+                <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+                <button onClick="{{ enterExplorer }}" style="display:inline-flex;align-items:center;gap:13px;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:16px 26px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s;" style-hover="border-color:var(--ac,#b5892e);">
+                  <span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font-size:8px;padding-left:2px;">▶</span>
+                  Reinigung ansehen
+                </button>
+              </div>
+            </div>
+            <div style="position:absolute;left:50%;bottom:clamp(24px,5vh,46px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;color:#7a7d84;font:600 11px/1 Inter;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;">
+              <span style="width:28px;height:1px;background:#3a3c42;"></span>Dein Auto im 3D-Showroom
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ isExplorer }}">
+          <div style="position:fixed;inset:0;z-index:1;">
+            <div ref="{{ dragRef }}" onPointerDown="{{ onDragStart }}" style="position:absolute;inset:0;cursor:grab;touch-action:none;"></div>
+
+            <button ref="{{ hs0 }}" onClick="{{ sel0 }}" style="position:absolute;left:0;top:0;z-index:5;transform:translate(-50%,-50%) scale(0.92);display:inline-flex;align-items:center;gap:10px;padding:8px 15px 8px 9px;border:1px solid rgba(241,240,238,0.22);border-radius:999px;background:rgba(16,17,20,0.74);backdrop-filter:blur(6px);color:#f1f0ee;cursor:pointer;white-space:nowrap;opacity:0;transition:border-color .25s,box-shadow .25s,transform .2s;">
+              <span style="display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font:600 12px/1 Inter;flex:none;">01</span>
+              <span style="font:600 11.5px/1 Inter;letter-spacing:0.13em;text-transform:uppercase;">Ankunft</span>
+            </button>
+            <button ref="{{ hs1 }}" onClick="{{ sel1 }}" style="position:absolute;left:0;top:0;z-index:5;transform:translate(-50%,-50%) scale(0.92);display:inline-flex;align-items:center;gap:10px;padding:8px 15px 8px 9px;border:1px solid rgba(241,240,238,0.22);border-radius:999px;background:rgba(16,17,20,0.74);backdrop-filter:blur(6px);color:#f1f0ee;cursor:pointer;white-space:nowrap;opacity:0;transition:border-color .25s,box-shadow .25s,transform .2s;">
+              <span style="display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font:600 12px/1 Inter;flex:none;">02</span>
+              <span style="font:600 11.5px/1 Inter;letter-spacing:0.13em;text-transform:uppercase;">Aussen</span>
+            </button>
+            <button ref="{{ hs2 }}" onClick="{{ sel2 }}" style="position:absolute;left:0;top:0;z-index:5;transform:translate(-50%,-50%) scale(0.92);display:inline-flex;align-items:center;gap:10px;padding:8px 15px 8px 9px;border:1px solid rgba(241,240,238,0.22);border-radius:999px;background:rgba(16,17,20,0.74);backdrop-filter:blur(6px);color:#f1f0ee;cursor:pointer;white-space:nowrap;opacity:0;transition:border-color .25s,box-shadow .25s,transform .2s;">
+              <span style="display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font:600 12px/1 Inter;flex:none;">03</span>
+              <span style="font:600 11.5px/1 Inter;letter-spacing:0.13em;text-transform:uppercase;">Innenraum</span>
+            </button>
+            <button ref="{{ hs3 }}" onClick="{{ sel3 }}" style="position:absolute;left:0;top:0;z-index:5;transform:translate(-50%,-50%) scale(0.92);display:inline-flex;align-items:center;gap:10px;padding:8px 15px 8px 9px;border:1px solid rgba(241,240,238,0.22);border-radius:999px;background:rgba(16,17,20,0.74);backdrop-filter:blur(6px);color:#f1f0ee;cursor:pointer;white-space:nowrap;opacity:0;transition:border-color .25s,box-shadow .25s,transform .2s;">
+              <span style="display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font:600 12px/1 Inter;flex:none;">04</span>
+              <span style="font:600 11.5px/1 Inter;letter-spacing:0.13em;text-transform:uppercase;">Kontrolle</span>
+            </button>
+            <button ref="{{ hs4 }}" onClick="{{ sel4 }}" style="position:absolute;left:0;top:0;z-index:5;transform:translate(-50%,-50%) scale(0.92);display:inline-flex;align-items:center;gap:10px;padding:8px 15px 8px 9px;border:1px solid rgba(241,240,238,0.22);border-radius:999px;background:rgba(16,17,20,0.74);backdrop-filter:blur(6px);color:#f1f0ee;cursor:pointer;white-space:nowrap;opacity:0;transition:border-color .25s,box-shadow .25s,transform .2s;">
+              <span style="display:flex;align-items:center;justify-content:center;width:27px;height:27px;border-radius:50%;background:var(--ac,#b5892e);color:var(--ink,#ffffff);font:600 12px/1 Inter;flex:none;">05</span>
+              <span style="font:600 11.5px/1 Inter;letter-spacing:0.13em;text-transform:uppercase;">Übergabe</span>
+            </button>
+
+            <div style="position:absolute;top:clamp(80px,11vh,106px);left:clamp(20px,5vw,56px);right:clamp(20px,5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:22;pointer-events:none;">
+              <div style="display:flex;align-items:baseline;gap:9px;font:600 11px/1 Inter;letter-spacing:0.2em;text-transform:uppercase;color:#8d9097;">
+                <span style="font:400 clamp(1.1rem,1.8vw,1.4rem)/1 Jost;color:var(--ac,#b5892e);">{{ stepN }}</span>
+                <span>/ 05 · Ablauf</span>
+              </div>
+            </div>
+
+            <div key="{{ stepN }}" style="position:absolute;left:clamp(14px,5vw,56px);bottom:clamp(16px,5vh,52px);width:min(380px,calc(100vw - 28px));z-index:12;background:rgba(16,17,20,0.82);backdrop-filter:blur(13px);border:1px solid rgba(241,240,238,0.1);border-radius:7px;padding:clamp(20px,2.5vw,26px);animation:arvCard .35s ease both;">
+              <div style="display:flex;align-items:center;gap:13px;margin-bottom:13px;">
+                <span style="font:400 clamp(2rem,3.2vw,2.7rem)/0.9 Jost;color:var(--ac,#b5892e);">{{ stepN }}</span>
+                <span style="font:600 11px/1.3 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;">Schritt {{ stepN }}<br>{{ stepTag }}</span>
+              </div>
+              <h3 style="margin:0;font:300 clamp(1.5rem,2.6vw,2.05rem)/1.1 Jost;letter-spacing:0.01em;color:#f1f0ee;">{{ stepTitle }}</h3>
+              <p style="margin:13px 0 0;font:400 clamp(0.98rem,1.3vw,1.08rem)/1.62 Inter;color:#b4b6bc;">{{ stepDesc }}</p>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:22px;">
+                <button onClick="{{ prevStep }}" aria-label="Vorheriger Schritt" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:none;border:1px solid rgba(241,240,238,0.2);color:#f1f0ee;font-size:17px;cursor:pointer;transition:border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">←</button>
+                <button onClick="{{ nextStep }}" aria-label="Nächster Schritt" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:none;border:1px solid rgba(241,240,238,0.2);color:#f1f0ee;font-size:17px;cursor:pointer;transition:border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">→</button>
+                <button onClick="{{ exitExplorer }}" style="margin-left:auto;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:12px 20px;font:500 12px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Schliessen ✕</button>
+              </div>
+            </div>
+
+            <div style="position:absolute;bottom:clamp(16px,5vh,52px);right:clamp(16px,5vw,56px);z-index:12;display:flex;align-items:center;gap:9px;font:600 10px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#6b6e74;pointer-events:none;">
+              <span style="font-size:14px;">⟲</span>Ziehen zum Drehen
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPreise }}">
+      <div data-screen-label="Preismodelle" data-comment-anchor="preise" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+        <div style="max-width:1180px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
+            <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Preismodelle</span>
+            <span style="height:1px;width:clamp(30px,5vw,56px);background:var(--ac,#b5892e);opacity:0.6;"></span>
+          </div>
+          <h2 style="margin:0;max-width:900px;font:300 clamp(2.4rem,6.4vw,4.8rem)/1.04 Jost;letter-spacing:0.01em;color:#f1f0ee;text-wrap:balance;">Drei Modelle. Ein Standard.</h2>
+          <p style="margin:26px 0 0;max-width:560px;font:400 clamp(1.02rem,1.5vw,1.18rem)/1.7 Inter;color:#b4b6bc;">Du wählst den Umfang — die Sorgfalt bleibt immer gleich. Alle Preise sind Festpreise und werden vorab vereinbart.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,56px);margin-top:clamp(48px,6vw,80px);">
+            <div style="flex:1 1 280px;min-width:0;border-top:1px solid rgba(241,240,238,0.18);padding-top:28px;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font:600 11px/1 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;"><span>01</span></div>
+              <h3 style="margin:16px 0 0;font:300 clamp(1.7rem,3vw,2.2rem)/1.05 Jost;letter-spacing:0.01em;color:#f1f0ee;">Aussenreinigung</h3>
+              <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Lack, Felgen und Glas — von Hand gewaschen und poliert.</p>
+              <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">190</span></div>
+              <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Handwäsche mit Schaum</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Lackreinigung &amp; Politur</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Felgen, Reifen &amp; Scheiben</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Versiegelung</span></li></ul>
+              <button onClick="{{ pickA }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
+            </div>
+            <div style="flex:1 1 280px;min-width:0;border-top:1px solid rgba(241,240,238,0.18);padding-top:28px;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font:600 11px/1 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;"><span>02</span></div>
+              <h3 style="margin:16px 0 0;font:300 clamp(1.7rem,3vw,2.2rem)/1.05 Jost;letter-spacing:0.01em;color:#f1f0ee;">Innenreinigung</h3>
+              <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Tiefenreinigung und Pflege für Leder, Stoff und jede Fuge.</p>
+              <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">220</span></div>
+              <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Staubsaugen &amp; Tiefenreinigung</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Leder- und Stoffpflege</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Kunststoff, Fugen &amp; Scheiben innen</span></li></ul>
+              <button onClick="{{ pickI }}" style="margin-top:36px;align-self:flex-start;background:none;color:#f1f0ee;border:1px solid rgba(241,240,238,0.28);border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Anfragen</button>
+            </div><div style="flex:1 1 280px;min-width:0;border-top:2px solid var(--ac,#b5892e);padding-top:28px;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font:600 11px/1 Inter;letter-spacing:0.22em;text-transform:uppercase;color:#8d9097;"><span>03</span><span style="color:var(--ac,#b5892e);">Empfohlen</span></div>
+              <h3 style="margin:16px 0 0;font:300 clamp(1.7rem,3vw,2.2rem)/1.05 Jost;letter-spacing:0.01em;color:#f1f0ee;">Komplett</h3>
+              <p style="margin:14px 0 0;font:400 15px/1.65 Inter;color:#b4b6bc;">Innen und aussen in einem Termin — mit Kontrolle und Übergabe.</p>
+              <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px;"><span style="font:600 11px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:#8d9097;">ab CHF</span><span style="font:300 clamp(2.4rem,4vw,3.2rem)/1 Jost;color:var(--ac,#b5892e);">380</span></div>
+              <ul style="list-style:none;margin:26px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;flex:1;"><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Alles aus Aussen- und Innenreinigung</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Kontrolle unter Prüflicht</span></li><li style="display:flex;gap:12px;font:400 15px/1.5 Inter;color:#b4b6bc;"><span style="color:var(--ac,#b5892e);">—</span><span>Persönliche Übergabe</span></li></ul>
+              <button onClick="{{ pickK }}" style="margin-top:36px;align-self:flex-start;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:15px 28px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s,border-color .2s;" style-hover="filter:brightness(1.08);">Anfragen</button>
+            </div>
+            
+          </div>
+          <p style="margin:clamp(40px,5vw,64px) 0 0;max-width:560px;font:400 14px/1.7 Inter;color:#7a7d84;">Richtwerte — der Endpreis hängt von Fahrzeuggrösse und Zustand ab und wird nach deiner Anfrage fest vereinbart.</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAbout }}">
+      <div data-screen-label="Über uns" data-comment-anchor="about" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+        <div style="max-width:1100px;margin:0 auto;">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px;">
+            <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Über Arventi</span>
+            <span style="height:1px;width:clamp(30px,5vw,56px);background:var(--ac,#b5892e);opacity:0.6;"></span>
+          </div>
+          <h2 style="margin:0;max-width:900px;font:300 clamp(2.4rem,6.4vw,4.8rem)/1.04 Jost;letter-spacing:0.01em;color:#f1f0ee;text-wrap:balance;">Eine Person. Ein Anspruch.</h2>
+
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(36px,6vw,80px);margin-top:clamp(50px,7vw,90px);align-items:flex-start;">
+            <div style="flex:1 1 420px;min-width:0;">
+              <p style="margin:0;font:300 clamp(1.15rem,1.9vw,1.4rem)/1.6 Jost;color:#f1f0ee;">Arventi ist aus einer einfachen Überzeugung entstanden: Ein Auto, das wirklich gepflegt wird, fährt nicht nur besser — es fühlt sich anders an.</p>
+              <p style="margin:26px 0 0;font:400 clamp(1.02rem,1.5vw,1.18rem)/1.75 Inter;color:#b4b6bc;">Angefangen in einer kleinen Garage in Winterthur, heute ein Ort, an dem Fahrzeuge die Zeit und Sorgfalt bekommen, die sie verdienen. Ich nehme pro Tag nur ein Fahrzeug an. Kein Fliessband, keine Eile — nur das Ergebnis.</p>
+            </div>
+            <div style="flex:1 1 320px;min-width:0;max-width:440px;aspect-ratio:4/5;border-radius:3px;background-image:repeating-linear-gradient(135deg,#17181b 0 11px,#1d1e22 11px 22px);display:flex;align-items:center;justify-content:center;">
+              <span style="font:400 12px/1.5 ui-monospace,Menlo,monospace;letter-spacing:0.08em;color:#7a7d84;text-transform:uppercase;text-align:center;padding:16px;">Porträt / Werkstatt<br>hier einsetzen</span>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(30px,5vw,64px);margin-top:clamp(60px,9vw,120px);">
+            <div style="flex:1 1 240px;min-width:0;">
+              <h3 style="margin:0;font:400 clamp(1.4rem,2.6vw,1.85rem)/1.1 Jost;letter-spacing:0.01em;color:#f1f0ee;">Sorgfalt</h3>
+              <p style="margin:14px 0 0;font:400 clamp(1rem,1.4vw,1.1rem)/1.7 Inter;color:#b4b6bc;">Jeder Handgriff sitzt. Ich arbeite langsam genug, um es richtig zu machen.</p>
+            </div>
+            <div style="flex:1 1 240px;min-width:0;">
+              <h3 style="margin:0;font:400 clamp(1.4rem,2.6vw,1.85rem)/1.1 Jost;letter-spacing:0.01em;color:#f1f0ee;">Qualität</h3>
+              <p style="margin:14px 0 0;font:400 clamp(1rem,1.4vw,1.1rem)/1.7 Inter;color:#b4b6bc;">Nur Materialien und Verfahren, die ich auch am eigenen Auto einsetze.</p>
+            </div>
+            <div style="flex:1 1 240px;min-width:0;">
+              <h3 style="margin:0;font:400 clamp(1.4rem,2.6vw,1.85rem)/1.1 Jost;letter-spacing:0.01em;color:#f1f0ee;">Transparenz</h3>
+              <p style="margin:14px 0 0;font:400 clamp(1rem,1.4vw,1.1rem)/1.7 Inter;color:#b4b6bc;">Fester Preis, vorab. Du weisst immer, was passiert und warum.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,56px);margin-top:clamp(60px,9vw,120px);border-top:1px solid rgba(241,240,238,0.12);padding-top:clamp(40px,5vw,64px);">
+            <div style="flex:1 1 180px;min-width:0;">
+              <div style="font:300 clamp(2.6rem,5vw,3.8rem)/1 Jost;letter-spacing:0.01em;color:var(--ac,#b5892e);">1</div>
+              <div style="margin-top:12px;font:400 clamp(0.95rem,1.3vw,1.05rem)/1.4 Inter;color:#b4b6bc;">Fahrzeug pro Tag</div>
+            </div>
+            <div style="flex:1 1 180px;min-width:0;">
+              <div style="font:300 clamp(2.6rem,5vw,3.8rem)/1 Jost;letter-spacing:0.01em;color:var(--ac,#b5892e);">4+</div>
+              <div style="margin-top:12px;font:400 clamp(0.95rem,1.3vw,1.05rem)/1.4 Inter;color:#b4b6bc;">Stunden reine Handarbeit</div>
+            </div>
+            <div style="flex:1 1 180px;min-width:0;">
+              <div style="font:300 clamp(2.6rem,5vw,3.8rem)/1 Jost;letter-spacing:0.01em;color:var(--ac,#b5892e);">0</div>
+              <div style="margin-top:12px;font:400 clamp(0.95rem,1.3vw,1.05rem)/1.4 Inter;color:#b4b6bc;">Kompromisse beim Finish</div>
+            </div>
+            <div style="flex:1 1 180px;min-width:0;">
+              <div style="font:300 clamp(2.6rem,5vw,3.8rem)/1 Jost;letter-spacing:0.01em;color:var(--ac,#b5892e);">24h</div>
+              <div style="margin-top:12px;font:400 clamp(0.95rem,1.3vw,1.05rem)/1.4 Inter;color:#b4b6bc;">bis zur Rückmeldung</div>
+            </div>
+          </div>
+
+          <div style="margin-top:clamp(60px,8vw,100px);">
+            <button onClick="{{ goTermin }}" style="background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:17px 36px;font:500 14px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Termin anfragen</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTermin }}">
+      <div data-screen-label="Termin anfragen" data-comment-anchor="termin" style="background:#0b0c0e;min-height:100vh;padding:clamp(120px,16vh,180px) clamp(20px,6vw,90px) clamp(60px,8vw,110px);">
+        <div style="max-width:720px;margin:0 auto;">
+
+          <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                <span style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);">Termin anfragen</span>
+                <span style="height:1px;width:clamp(30px,5vw,56px);background:var(--ac,#b5892e);opacity:0.6;"></span>
+              </div>
+              <h2 style="margin:0;font:300 clamp(2.2rem,6vw,3.9rem)/1.05 Jost;letter-spacing:0.01em;color:#f1f0ee;text-wrap:balance;">Sprich mit mir über dein Auto.</h2>
+              <p style="margin:24px 0 0;max-width:520px;font:400 clamp(1.05rem,1.6vw,1.2rem)/1.65 Inter;color:#b4b6bc;">Keine Verpflichtung. Ich schaue mir deine Anfrage an und melde mich mit einem konkreten Vorschlag und Terminvorschlag.</p>
+
+              <form onSubmit="{{ submit }}" style="margin-top:clamp(40px,5vw,64px);">
+                <div style="display:flex;flex-wrap:wrap;gap:28px;">
+                  <label style="flex:1 1 260px;min-width:0;display:block;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Name</span>
+                    <input type="text" value="{{ fName }}" onChange="{{ onName }}" placeholder="Dein Name" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px) Inter;padding:12px 2px;outline:none;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);"/>
+                    <sc-if value="{{ errName }}"><span style="display:block;margin-top:8px;font:400 13px Inter;color:#ff7a72;">{{ errName }}</span></sc-if>
+                  </label>
+                  <label style="flex:1 1 260px;min-width:0;display:block;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Telefon oder E-Mail</span>
+                    <input type="text" value="{{ fContact }}" onChange="{{ onContact }}" placeholder="So erreiche ich dich" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px) Inter;padding:12px 2px;outline:none;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);"/>
+                    <sc-if value="{{ errContact }}"><span style="display:block;margin-top:8px;font:400 13px Inter;color:#ff7a72;">{{ errContact }}</span></sc-if>
+                  </label>
+                </div>
+
+                <div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:28px;">
+                  <label style="flex:1 1 260px;min-width:0;display:block;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Fahrzeug (Marke &amp; Modell)</span>
+                    <input type="text" value="{{ fVehicle }}" onChange="{{ onVehicle }}" placeholder="z. B. Audi RS6" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px) Inter;padding:12px 2px;outline:none;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);"/>
+                    <sc-if value="{{ errVehicle }}"><span style="display:block;margin-top:8px;font:400 13px Inter;color:#ff7a72;">{{ errVehicle }}</span></sc-if>
+                  </label>
+                  <label style="flex:1 1 260px;min-width:0;display:block;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Preismodell</span>
+                    <select value="{{ fService }}" onChange="{{ onService }}" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px) Inter;padding:12px 2px;outline:none;cursor:pointer;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);">
+                      <option value="">Bitte wählen</option>
+                      <option value="Aussenreinigung">Aussenreinigung – ab CHF 190</option>
+                      <option value="Innenreinigung">Innenreinigung – ab CHF 220</option>
+                      <option value="Komplett (innen + aussen)">Komplett (innen + aussen) – ab CHF 380</option>
+                      <option value="Beratung / noch unsicher">Beratung / noch unsicher</option>
+                    </select>
+                    <sc-if value="{{ errService }}"><span style="display:block;margin-top:8px;font:400 13px Inter;color:#ff7a72;">{{ errService }}</span></sc-if>
+                    <button type="button" onClick="{{ goPreise }}" style="margin-top:10px;background:none;border:none;padding:0;color:var(--ac,#b5892e);font:500 13px Inter;cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Preismodelle ansehen →</button>
+                  </label>
+                </div>
+
+                <div style="margin-top:28px;">
+                  <label style="display:block;max-width:320px;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Wunschtermin</span>
+                    <input type="date" value="{{ fDate }}" onChange="{{ onDate }}" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px) Inter;padding:12px 2px;outline:none;color-scheme:dark;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);"/>
+                  </label>
+                </div>
+
+                <div style="margin-top:28px;">
+                  <label style="display:block;">
+                    <span style="display:block;font:600 11.5px/1 Inter;letter-spacing:0.12em;text-transform:uppercase;color:#8d9097;margin-bottom:12px;">Nachricht (optional)</span>
+                    <textarea value="{{ fMessage }}" onChange="{{ onMessage }}" rows="3" placeholder="Zustand, Wünsche, Besonderheiten …" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(241,240,238,0.22);color:#f1f0ee;font:400 clamp(16px,1.6vw,18px)/1.5 Inter;padding:12px 2px;outline:none;resize:vertical;transition:border-color .2s;" style-focus="border-bottom-color:var(--ac,#b5892e);"></textarea>
+                  </label>
+                </div>
+
+                <label style="display:flex;align-items:flex-start;gap:14px;margin-top:34px;cursor:pointer;">
+                  <input type="checkbox" checked="{{ fConsent }}" onChange="{{ onConsent }}" style="width:18px;height:18px;margin-top:3px;accent-color:var(--ac,#b5892e);flex:none;cursor:pointer;"/>
+                  <span style="font:400 14px/1.55 Inter;color:#b4b6bc;">Ich habe die <button type="button" onClick="{{ openDatenschutz }}" style="background:none;border:none;padding:0;color:var(--ac,#b5892e);font:inherit;cursor:pointer;text-decoration:underline;">Datenschutzerklärung</button> zur Kenntnis genommen und bin einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert werden.</span>
+                </label>
+                <sc-if value="{{ errConsent }}"><span style="display:block;margin-top:10px;font:400 13px Inter;color:#ff7a72;">{{ errConsent }}</span></sc-if>
+
+                <button type="submit" style="margin-top:40px;background:var(--ac,#b5892e);color:var(--ink,#ffffff);border:none;border-radius:2px;padding:18px 42px;font:500 15px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:filter .2s;" style-hover="filter:brightness(1.08);">Anfrage senden</button>
+              </form>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ submitted }}">
+            <div style="padding-top:clamp(20px,6vh,60px);animation:arvFade .5s ease both;">
+              <div style="font:600 clamp(12px,1.4vw,14px)/1 Inter;letter-spacing:0.26em;text-transform:uppercase;color:var(--ac,#b5892e);margin-bottom:24px;">Anfrage erhalten</div>
+              <h2 style="margin:0;font:300 clamp(2.4rem,7vw,4.2rem)/1.02 Jost;letter-spacing:0.01em;color:#f1f0ee;">Danke, {{ confirmName }}.</h2>
+              <p style="margin:26px 0 0;max-width:520px;font:400 clamp(1.1rem,1.7vw,1.3rem)/1.65 Inter;color:#b4b6bc;">Deine Anfrage ist bei mir angekommen. Ich melde mich innerhalb von 24 Stunden persönlich bei dir — meistens schneller.</p>
+              <button onClick="{{ resetForm }}" style="margin-top:38px;background:none;border:1px solid rgba(241,240,238,0.28);color:#f1f0ee;border-radius:2px;padding:15px 30px;font:500 13px/1 Inter;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:border-color .2s;" style-hover="border-color:var(--ac,#b5892e);">Weitere Anfrage senden</button>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+  <footer style="position:relative;z-index:10;background:#101114;border-top:5px solid var(--ac,#b5892e);padding:clamp(50px,7vw,96px) clamp(20px,5vw,56px) 42px;">
+    <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:44px;justify-content:space-between;">
+      <div style="flex:1 1 280px;min-width:0;">
+        <span style="display:block;font:300 18px/1 Jost;letter-spacing:0.3em;color:#f1f0ee;padding-left:0.3em;">ARVENTI</span>
+        <span style="display:block;font:500 8px/1 Inter;letter-spacing:0.4em;color:var(--ac,#b5892e);margin-top:5px;padding-left:0.4em;">AUTO DETAILING</span>
+        <p style="margin:18px 0 0;max-width:300px;font:400 15px/1.7 Inter;color:#9a9da3;">Fahrzeugaufbereitung in Winterthur. Ein Fahrzeug pro Tag, volle Aufmerksamkeit.</p>
+      </div>
+      <div style="flex:0 1 auto;min-width:160px;">
+        <h4 style="margin:0 0 16px;font:600 11.5px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:var(--ac,#b5892e);">Kontakt</h4>
+        <p style="margin:0;font:400 15px/1.8 Inter;color:#b4b6bc;">Technikumstrasse 12<br>8400 Winterthur</p>
+        <p style="margin:12px 0 0;font:400 15px/1.8 Inter;color:#b4b6bc;"><a href="tel:+41521234567">+41 52 123 45 67</a><br><a href="mailto:hallo@arventi.ch">hallo@arventi.ch</a></p>
+      </div>
+      <div style="flex:0 1 auto;min-width:160px;">
+        <h4 style="margin:0 0 16px;font:600 11.5px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:var(--ac,#b5892e);">Öffnungszeiten</h4>
+        <p style="margin:0;font:400 15px/1.8 Inter;color:#b4b6bc;">Mo – Fr&nbsp;&nbsp;08 – 18 Uhr<br>Sa&nbsp;&nbsp;nach Vereinbarung<br>So&nbsp;&nbsp;geschlossen</p>
+      </div>
+      <div style="flex:0 1 auto;min-width:140px;">
+        <h4 style="margin:0 0 16px;font:600 11.5px/1 Inter;letter-spacing:0.16em;text-transform:uppercase;color:var(--ac,#b5892e);">Rechtliches</h4>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;">
+          <button onClick="{{ openImpressum }}" style="background:none;border:none;padding:0;font:400 15px/1 Inter;color:#b4b6bc;cursor:pointer;transition:color .2s;" style-hover="color:#f1f0ee;">Impressum</button>
+          <button onClick="{{ openDatenschutz }}" style="background:none;border:none;padding:0;font:400 15px/1 Inter;color:#b4b6bc;cursor:pointer;transition:color .2s;" style-hover="color:#f1f0ee;">Datenschutz</button>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1180px;margin:38px auto 0;border-top:1px solid rgba(241,240,238,0.1);padding-top:22px;font:400 12.5px/1 Inter;color:#7a7d84;">© 2026 Arventi · Winterthur</div>
+  </footer>
+  <div style="height:5px;background:var(--ac,#b5892e);position:relative;z-index:10;"></div>
+  </sc-if>
+
+  <sc-if value="{{ legalOpen }}">
+    <div onClick="{{ closeLegal }}" style="position:fixed;inset:0;z-index:70;background:rgba(0,0,0,0.65);display:flex;align-items:flex-start;justify-content:center;padding:clamp(16px,6vh,80px) 18px;overflow:auto;">
+      <div onClick="{{ stop }}" style="background:#16171a;max-width:640px;width:100%;border:1px solid rgba(241,240,238,0.1);border-radius:4px;padding:clamp(28px,4vw,48px);box-shadow:0 30px 80px rgba(0,0,0,0.6);">
+        <button onClick="{{ closeLegal }}" style="float:right;background:none;border:none;color:#8d9097;font:500 13px Inter;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">✕</button>
+        <sc-if value="{{ legalImpressum }}">
+          <div>
+            <h3 style="margin:0 0 20px;font:300 clamp(1.7rem,4vw,2.3rem)/1.08 Jost;letter-spacing:0.01em;color:#f1f0ee;">Impressum</h3>
+            <p style="margin:0;font:400 16px/1.75 Inter;color:#b4b6bc;">Arventi Fahrzeugaufbereitung<br>Inhaber: [Dein Name]<br>Technikumstrasse 12, 8400 Winterthur<br>Telefon +41 52 123 45 67<br>hallo@arventi.ch<br>UID: CHE-123.456.789 MWST</p>
+            <p style="margin:22px 0 0;font:400 14px/1.7 Inter;color:#7a7d84;">Platzhalter — bitte vor dem Livegang durch deine rechtsgültigen Angaben ersetzen.</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ legalDatenschutz }}">
+          <div>
+            <h3 style="margin:0 0 20px;font:300 clamp(1.7rem,4vw,2.3rem)/1.08 Jost;letter-spacing:0.01em;color:#f1f0ee;">Datenschutz</h3>
+            <p style="margin:0;font:400 16px/1.75 Inter;color:#b4b6bc;">Deine Angaben aus dem Anfrageformular (Name, Kontakt, Fahrzeug, Wunschtermin und Nachricht) werden ausschliesslich zur Bearbeitung deiner Anfrage verwendet und nicht an Dritte weitergegeben. Du kannst jederzeit die Löschung deiner Daten verlangen.</p>
+            <p style="margin:22px 0 0;font:400 14px/1.7 Inter;color:#7a7d84;">Platzhalter — bitte vor dem Livegang durch deine vollständige Datenschutzerklärung ersetzen.</p>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: &quot;100%&quot; },
+  &quot;accentColor&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#b5892e&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#b5892e&quot;, &quot;#d9b865&quot;, &quot;#e8404a&quot;, &quot;#c9ccd2&quot;, &quot;#f1f0ee&quot;], &quot;section&quot;: &quot;Marke&quot; },
+  &quot;particleDensity&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;Standard&quot;, &quot;options&quot;: [&quot;Dezent&quot;, &quot;Standard&quot;, &quot;Dicht&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;3D-Szene&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    view: 'home',
+    mode: 'landing',
+    activeStep: 0,
+    isMobile: (typeof window !== 'undefined' && window.innerWidth < 760),
+    menuOpen: false,
+    legal: null,
+    submitted: false,
+    form: { name: '', contact: '', vehicle: '', service: '', date: '', message: '', consent: false },
+    errors: {}
+  };
+
+  canvasRef = React.createRef();
+  dragRef = React.createRef();
+  hsRefs = [0,1,2,3,4].map(() => React.createRef());
+
+  STEPS = [
+    { n:'01', tag:'Ankunft',   title:'Das Fahrzeug kommt an',  desc:'Übernahme und ehrliche Bestandsaufnahme — wir schauen uns deinen Wagen genau an, so wie er ist.' },
+    { n:'02', tag:'Aussen',    title:'Von aussen aufbereitet', desc:'Dicker Schaum, Handwäsche und Politur, Panel für Panel, bis jeder Zentimeter Lack makellos glänzt.' },
+    { n:'03', tag:'Innenraum', title:'Innen wie neu',          desc:'Türen auf: Staubsauger, Pflege und Schutz für Leder, Stoff und jede Fuge — der ganze Innenraum.' },
+    { n:'04', tag:'Kontrolle', title:'Sauberer als zuvor',     desc:'Unter Prüflicht geht jede Fläche ein letztes Mal durch unsere Hände.' },
+    { n:'05', tag:'Übergabe',  title:'Schlüssel zurück',       desc:'Erst wenn alles sitzt, übergeben wir — mit einem Fahrzeug, das sich wieder wie deins anfühlt.' }
+  ];
+  modelForStep = ['glb','glbWash','glbOpen','glb','glb'];
+  camLanding = { az:-0.7, el:0.17, dist:9.4, ty:-0.05 };
+  stepCam = [
+    { az:1.05, el:0.10, dist:7.4, ty:-0.05 },
+    { az:0.08, el:0.10, dist:7.0, ty:-0.05 },
+    { az:0.55, el:0.14, dist:6.6, ty:0.00 },
+    { az:-0.52, el:0.46, dist:7.7, ty:0.00 },
+    { az:-1.15, el:0.12, dist:7.5, ty:-0.05 }
+  ];
+  anchors = [
+    [ 2.40,-0.05, 0.20,  1,0.12,0.20],
+    [ 0.60, 0.20, 1.15,  0,0.15,1],
+    [-0.55, 0.00, 1.00,  0,0.10,1],
+    [ 0.45, 0.56, 0.10,  0,1,0.08],
+    [-2.40,-0.03, 0.20, -1,0.12,0.20]
+  ];
+
+  componentDidMount() {
+    this.reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this.t0 = performance.now(); this.last = this.t0; this._tries = 0;
+    this.cam = Object.assign({}, this.camLanding);
+    this.camTarget = Object.assign({}, this.camLanding);
+    this.mo = { glb:1, glbOpen:0, glbWash:0 }; this.vs = (window.innerWidth >= 760) ? 0.2 : 0;
+    this.dragging = false;
+    this._onResize = () => { this.handleResize(); const m = window.innerWidth < 760; if (m !== this.state.isMobile) this.setState({ isMobile: m }); };
+    this._onMove = (e) => this.onDragMove(e);
+    this._onUp = () => { this.dragging = false; try { if (this.dragRef.current) this.dragRef.current.style.cursor = 'grab'; } catch (e) {} };
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('pointermove', this._onMove);
+    window.addEventListener('pointerup', this._onUp);
+    window.addEventListener('pointercancel', this._onUp);
+    this.waitThree();
+  }
+
+  componentWillUnmount() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('pointermove', this._onMove);
+    window.removeEventListener('pointerup', this._onUp);
+    window.removeEventListener('pointercancel', this._onUp);
+    try { if (this.three && this.three.renderer) this.three.renderer.dispose(); } catch (e) {}
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.three) return;
+    if (prevProps.accentColor !== this.props.accentColor) {
+      this.c1.set(this.props.accentColor || '#b5892e');
+      this.three.pmat.color.copy(this.c0).lerp(this.c1, 0.45);
+      if (this.reduced || this.state.view !== 'home') this.renderOnce();
+    }
+    if (prevProps.particleDensity !== this.props.particleDensity) this.buildParticles(this.densityN());
+  }
+
+  waitThree() {
+    if (window.THREE && (window.THREE.GLTFLoader || this._tries > 80)) { this.initThree(); return; }
+    if (this._tries++ < 240) setTimeout(() => this.waitThree(), 50);
+  }
+
+  lum(hex) {
+    hex = (hex || '').replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const n = parseInt(hex, 16);
+    if (isNaN(n)) return 0.5;
+    const r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+    const f = c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  }
+
+  densityN() {
+    const base = this.state.isMobile ? 260 : 620;
+    const mult = { 'Dezent': 0.5, 'Standard': 1, 'Dicht': 1.7 }[this.props.particleDensity || 'Standard'] || 1;
+    return Math.round(base * mult);
+  }
+
+  buildParticles(N) {
+    const THREE = window.THREE, T = this.three;
+    if (T.points) { T.scene.remove(T.points); if (T.p && T.p.geo) T.p.geo.dispose(); }
+    const pos = new Float32Array(N * 3), baseX = new Float32Array(N), baseZ = new Float32Array(N),
+          spd = new Float32Array(N), pha = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      baseX[i] = (Math.random() - 0.5) * 13;
+      baseZ[i] = (Math.random() - 0.5) * 6;
+      const y = Math.random() * 5.8 - 1.6;
+      pos[i*3] = baseX[i]; pos[i*3+1] = y; pos[i*3+2] = baseZ[i];
+      spd[i] = 0.4 + Math.random() * 1.0;
+      pha[i] = Math.random() * 6.283;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const points = new THREE.Points(geo, T.pmat);
+    T.scene.add(points);
+    T.points = points;
+    T.p = { pos, baseX, baseZ, spd, pha, N, geo };
+  }
+
+  initThree() {
+    const THREE = window.THREE, cv = this.canvasRef.current;
+    if (!cv) { if (this._tries++ < 240) setTimeout(() => this.initThree(), 50); return; }
+    const ac = this.props.accentColor || '#b5892e';
+    const w = window.innerWidth, h = window.innerHeight, mobile = this.state.isMobile;
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(42, w / h, 0.1, 200);
+    const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: !mobile, alpha: false });
+    renderer.setClearColor(0x0b0c0e, 1);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2));
+    renderer.setSize(w, h, false);
+
+    this.c0 = new THREE.Color(0x8d9097);
+    this.c1 = new THREE.Color(ac);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x1a1b1f, 0.65));
+    const key = new THREE.DirectionalLight(0xffffff, 1.05); key.position.set(5, 8, 6); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xdfe6ee, 0.4); fill.position.set(-6, 4, -5); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 1.5); rim.position.set(-5, 3, -7); scene.add(rim);
+    const rim2 = new THREE.DirectionalLight(0xffffff, 0.8); rim2.position.set(6, 2.5, -6); scene.add(rim2);
+
+    const group = new THREE.Group(); scene.add(group);
+
+    const sc = document.createElement('canvas'); sc.width = sc.height = 128;
+    const sg = sc.getContext('2d');
+    const sgr = sg.createRadialGradient(64, 64, 4, 64, 64, 64);
+    sgr.addColorStop(0, 'rgba(0,0,0,0.55)'); sgr.addColorStop(1, 'rgba(0,0,0,0)');
+    sg.fillStyle = sgr; sg.fillRect(0, 0, 128, 128);
+    const stex = new THREE.Texture(sc); stex.needsUpdate = true;
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(7.6, 3.4), new THREE.MeshBasicMaterial({ map: stex, transparent: true, depthWrite: false }));
+    shadow.rotation.x = -Math.PI / 2; shadow.position.y = -1.16; group.add(shadow);
+
+    const pc = document.createElement('canvas'); pc.width = pc.height = 64;
+    const g2 = pc.getContext('2d');
+    const gr = g2.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)');
+    gr.addColorStop(0.45, 'rgba(255,255,255,0.7)');
+    gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g2.fillStyle = gr; g2.fillRect(0, 0, 64, 64);
+    const tex = new THREE.Texture(pc); tex.needsUpdate = true;
+    const pmat = new THREE.PointsMaterial({ size: 0.05, map: tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.28, sizeAttenuation: true });
+    pmat.color.copy(this.c0).lerp(this.c1, 0.45);
+
+    this.three = { THREE, scene, cam, renderer, group, key, pmat, points: null, p: null, glb: null, glbOpen: null, glbWash: null };
+    this.buildParticles(this.densityN());
+    this.handleResize();
+
+    const loadCar = (url, rotY, key) => new THREE.GLTFLoader().load(url, (gltf) => {
+      const m = gltf.scene; m.rotation.y = rotY;
+      let box = new THREE.Box3().setFromObject(m), sz = box.getSize(new THREE.Vector3());
+      m.scale.setScalar(5.3 / Math.max(sz.x, sz.z));
+      box = new THREE.Box3().setFromObject(m); const ctr = box.getCenter(new THREE.Vector3());
+      m.position.set(-ctr.x, -1.15 - box.min.y, -ctr.z);
+      m.traverse(o => { if (o.isMesh) { const mt = o.material; mt.metalness = 0.4; mt.roughness = 0.72; mt.emissive = new THREE.Color(0x8a8a8a); mt.emissiveMap = mt.map; mt.emissiveIntensity = 0.45; mt.needsUpdate = true; this.three[key + 'Mat'] = mt; } });
+      m.visible = (key === 'glb');
+      this.three.group.add(m); this.three[key] = m;
+      if (this.reduced || this.state.view !== 'home') this.renderOnce();
+    }, undefined, (e) => console.warn('GLB load failed', e));
+    if (THREE.GLTFLoader) { loadCar('assets/car.glb', Math.PI / 2, 'glb'); loadCar('assets/car-open.glb', 0, 'glbOpen'); loadCar('assets/car-wash.glb', Math.PI / 2, 'glbWash'); }
+
+    this.raf = requestAnimationFrame(this.animate);
+  }
+
+  lerpA(cur, tgt, s) { let d = tgt - cur; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI; return cur + d * s; }
+
+  animate = () => {
+    this.raf = requestAnimationFrame(this.animate);
+    const T = this.three; if (!T) return;
+    if (this.state.view !== 'home') return;
+    const now = performance.now();
+    const t = (now - this.t0) / 1000;
+    const dt = Math.min(now - this.last, 50) / 1000; this.last = now;
+    const landing = this.state.mode === 'landing';
+
+    if (landing) {
+      this.camTarget.az -= (this.reduced ? 0 : 0.0014);
+      this.camTarget.el = this.camLanding.el;
+      this.camTarget.dist = this.camLanding.dist;
+      this.camTarget.ty = this.camLanding.ty;
+    }
+
+    const s = this.reduced ? 0.3 : 0.08;
+    this.cam.az = this.lerpA(this.cam.az, this.camTarget.az, s);
+    this.cam.el += (this.camTarget.el - this.cam.el) * s;
+    this.cam.dist += (this.camTarget.dist - this.cam.dist) * s;
+    this.cam.ty += (this.camTarget.ty - this.cam.ty) * s;
+    this.vs += (((landing && !this.state.isMobile) ? 0.2 : 0) - this.vs) * s;
+
+    const swTgt = (landing && !this.reduced) ? Math.sin(t * 0.12) * 0.02 : 0;
+    T.group.rotation.y += (swTgt - T.group.rotation.y) * 0.08;
+
+    const tgtKey = landing ? 'glb' : this.modelForStep[this.state.activeStep];
+    ['glb','glbOpen','glbWash'].forEach(k => {
+      const m = T[k], mt = T[k + 'Mat']; if (!m || !mt) return;
+      const tv = k === tgtKey ? 1 : 0;
+      this.mo[k] += (tv - this.mo[k]) * (this.reduced ? 1 : 0.14);
+      const v = this.mo[k], mid = v > 0.01 && v < 0.99;
+      m.visible = v > 0.01;
+      mt.transparent = mid; mt.opacity = v; mt.depthWrite = !mid;
+    });
+
+    if (T.p) {
+      const { pos, baseX, baseZ, spd, pha, N, geo } = T.p, drift = this.reduced ? 0 : 1;
+      for (let i = 0; i < N; i++) {
+        let y = pos[i*3+1] + 0.25 * spd[i] * dt * drift;
+        if (y > 4.3) { y = -1.6; baseX[i] = (Math.random() - 0.5) * 13; baseZ[i] = (Math.random() - 0.5) * 6; }
+        pos[i*3+1] = y;
+        pos[i*3]   = baseX[i] + Math.sin(t * 0.5 + pha[i]) * 0.18 * drift;
+        pos[i*3+2] = baseZ[i] + Math.cos(t * 0.45 + pha[i]) * 0.18 * drift;
+      }
+      geo.attributes.position.needsUpdate = true;
+    }
+    const potTgt = landing ? 0.3 : 0.07;
+    T.pmat.opacity += (potTgt - T.pmat.opacity) * 0.06;
+
+    if (!this.reduced) T.key.position.set(Math.cos(t * 0.4) * 7, 8, Math.sin(t * 0.4) * 7 + 2);
+
+    this.draw();
+  };
+
+  draw() {
+    const T = this.three; if (!T) return;
+    const c = this.cam, hr = c.dist * Math.cos(c.el);
+    T.cam.position.set(hr * Math.sin(c.az), c.dist * Math.sin(c.el) + c.ty, hr * Math.cos(c.az));
+    T.cam.lookAt(0, c.ty, 0);
+    const vw = window.innerWidth, vh = window.innerHeight;
+    if (Math.abs(this.vs) > 0.001) T.cam.setViewOffset(vw, vh, -this.vs * vw, 0, vw, vh); else if (T.cam.view) T.cam.clearViewOffset();
+    T.renderer.render(T.scene, T.cam);
+    this.positionHotspots();
+  }
+
+  positionHotspots() {
+    const T = this.three; if (!T) return;
+    const THREE = T.THREE, cam = T.cam, W = window.innerWidth, H = window.innerHeight;
+    const show = this.state.view === 'home' && this.state.mode === 'explorer';
+    const Y = new THREE.Vector3(0, 1, 0), ry = T.group.rotation.y;
+    for (let i = 0; i < 5; i++) {
+      const el = this.hsRefs[i].current; if (!el) continue;
+      if (!show) { if (el.style.opacity !== '0') { el.style.opacity = '0'; el.style.pointerEvents = 'none'; } continue; }
+      const a = this.anchors[i];
+      const p = new THREE.Vector3(a[0], a[1], a[2]).applyAxisAngle(Y, ry);
+      const nrm = new THREE.Vector3(a[3], a[4], a[5]).applyAxisAngle(Y, ry).normalize();
+      const camDir = cam.position.clone().sub(p).normalize();
+      const facing = nrm.dot(camDir);
+      const proj = p.clone().project(cam);
+      const behind = proj.z > 1;
+      const x = (proj.x * 0.5 + 0.5) * W, y = (-proj.y * 0.5 + 0.5) * H;
+      const active = this.state.activeStep === i;
+      let op = behind ? 0 : Math.max(0, Math.min(1, (facing - 0.12) / 0.4));
+      if (active) op = Math.max(op, 0.9);
+      el.style.left = x.toFixed(1) + 'px';
+      el.style.top = y.toFixed(1) + 'px';
+      el.style.opacity = op.toFixed(2);
+      el.style.pointerEvents = op > 0.3 ? 'auto' : 'none';
+      el.style.zIndex = active ? 7 : (3 + Math.round(op * 2));
+      el.style.transform = 'translate(-50%,-50%) scale(' + (active ? 1.06 : 0.92) + ')';
+      el.style.borderColor = active ? 'var(--ac,#b5892e)' : 'rgba(241,240,238,0.22)';
+      el.style.boxShadow = active ? '0 0 0 4px rgba(181,137,46,0.22)' : 'none';
+    }
+  }
+
+  renderOnce() { this.draw(); }
+
+  handleResize() {
+    const T = this.three; if (!T) return;
+    const w = window.innerWidth, h = window.innerHeight;
+    T.cam.aspect = w / h; T.cam.updateProjectionMatrix();
+    T.renderer.setSize(w, h, false);
+    this.draw();
+  }
+
+  go(v) {
+    try { document.body.style.overflow = ''; } catch (e) {}
+    this.setState({ view: v, menuOpen: false });
+    window.scrollTo(0, 0);
+    this.last = performance.now();
+    if (this.reduced) setTimeout(() => this.renderOnce(), 40);
+  }
+  goHome = () => { this.setState({ mode: 'landing', activeStep: 0 }); this.camTarget = Object.assign({}, this.camLanding); this.go('home'); };
+  goAbout = () => this.go('about');
+  goTermin = () => this.go('termin');
+  goPreise = () => this.go('preise');
+  pickPlan(v) { this.setState(st => ({ form: Object.assign({}, st.form, { service: v }), errors: Object.assign({}, st.errors, { service: '' }) })); this.go('termin'); }
+  pickA = () => this.pickPlan('Aussenreinigung');
+  pickI = () => this.pickPlan('Innenreinigung');
+  pickK = () => this.pickPlan('Komplett (innen + aussen)');
+
+  enterExplorer = () => { try { document.body.style.overflow = 'hidden'; } catch (e) {} this.setState({ mode: 'explorer', activeStep: 0 }); this.camTarget = Object.assign({}, this.stepCam[0]); this.last = performance.now(); if (this.reduced) setTimeout(() => this.renderOnce(), 40); };
+  exitExplorer = () => { try { document.body.style.overflow = ''; } catch (e) {} this.setState({ mode: 'landing', activeStep: 0 }); this.camTarget = Object.assign({}, this.camLanding); if (this.reduced) setTimeout(() => this.renderOnce(), 40); };
+  selectStep(i) { this.setState({ activeStep: i }); this.camTarget = Object.assign({}, this.stepCam[i]); if (this.reduced) setTimeout(() => this.renderOnce(), 40); }
+  sel0 = () => this.selectStep(0);
+  sel1 = () => this.selectStep(1);
+  sel2 = () => this.selectStep(2);
+  sel3 = () => this.selectStep(3);
+  sel4 = () => this.selectStep(4);
+  prevStep = () => this.selectStep((this.state.activeStep + 4) % 5);
+  nextStep = () => this.selectStep((this.state.activeStep + 1) % 5);
+
+  onDragStart = (e) => {
+    if (this.state.mode !== 'explorer') return;
+    this.dragging = true; this.px = e.clientX; this.py = e.clientY;
+    try { if (this.dragRef.current) this.dragRef.current.style.cursor = 'grabbing'; } catch (err) {}
+  };
+  onDragMove(e) {
+    if (!this.dragging || this.state.mode !== 'explorer') return;
+    const dx = e.clientX - this.px, dy = e.clientY - this.py; this.px = e.clientX; this.py = e.clientY;
+    this.camTarget.az -= dx * 0.006;
+    this.camTarget.el = Math.max(-0.05, Math.min(0.9, this.camTarget.el + dy * 0.006));
+  }
+
+  toggleMenu = () => this.setState(st => {
+    const o = !st.menuOpen;
+    try { document.body.style.overflow = o ? 'hidden' : ''; } catch (e) {}
+    return { menuOpen: o };
+  });
+  closeMenu = () => { try { document.body.style.overflow = ''; } catch (e) {} this.setState({ menuOpen: false }); };
+  openImpressum = () => { try { document.body.style.overflow = 'hidden'; } catch (e) {} this.setState({ legal: 'impressum' }); };
+  openDatenschutz = () => { try { document.body.style.overflow = 'hidden'; } catch (e) {} this.setState({ legal: 'datenschutz' }); };
+  closeLegal = () => { try { document.body.style.overflow = ''; } catch (e) {} this.setState({ legal: null }); };
+  stop = (e) => { e.stopPropagation(); };
+
+  setField(key, val) {
+    this.setState(st => ({ form: Object.assign({}, st.form, { [key]: val }), errors: Object.assign({}, st.errors, { [key]: '' }) }));
+  }
+  onName = e => this.setField('name', e.target.value);
+  onContact = e => this.setField('contact', e.target.value);
+  onVehicle = e => this.setField('vehicle', e.target.value);
+  onService = e => this.setField('service', e.target.value);
+  onDate = e => this.setField('date', e.target.value);
+  onMessage = e => this.setField('message', e.target.value);
+  onConsent = e => this.setField('consent', e.target.checked);
+
+  async sendToEndpoint(data) { return true; }
+
+  submit = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const f = this.state.form, er = {};
+    if (!f.name.trim()) er.name = 'Bitte gib deinen Namen an.';
+    if (!f.contact.trim()) er.contact = 'Telefon oder E-Mail wird benötigt.';
+    if (!f.vehicle.trim()) er.vehicle = 'Welches Fahrzeug sollen wir aufbereiten?';
+    if (!f.service) er.service = 'Bitte wähle eine Leistung.';
+    if (!f.consent) er.consent = 'Bitte bestätige den Datenschutz.';
+    if (Object.keys(er).length) { this.setState({ errors: er }); return; }
+    this.setState({ errors: {}, submitted: true });
+    window.scrollTo(0, 0);
+    this.sendToEndpoint(f);
+  };
+
+  resetForm = () => this.setState({
+    submitted: false,
+    form: { name: '', contact: '', vehicle: '', service: '', date: '', message: '', consent: false },
+    errors: {}
+  });
+
+  renderVals() {
+    const accent = this.props.accentColor || '#b5892e';
+    const La = this.lum(accent);
+    const contrast = (l1, l2) => (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    const ink = contrast(La, this.lum('#07131b')) >= contrast(La, 1) ? '#07131b' : '#ffffff';
+    const v = this.state.view, f = this.state.form, er = this.state.errors;
+    const st = this.STEPS[this.state.activeStep] || this.STEPS[0];
+    return {
+      accent, ink,
+      isMobile: this.state.isMobile, notMobile: !this.state.isMobile,
+      homeColor: v === 'home' ? '#f1f0ee' : '#8d9097',
+      aboutColor: v === 'about' ? '#f1f0ee' : '#8d9097',
+      isPreise: v === 'preise', preiseColor: v === 'preise' ? '#f1f0ee' : '#8d9097',
+      pickA: this.pickA, pickI: this.pickI, pickK: this.pickK, goPreise: this.goPreise,
+      isHome: v === 'home', isAbout: v === 'about', isTermin: v === 'termin',
+      isLanding: this.state.mode === 'landing', isExplorer: this.state.mode === 'explorer',
+      showChrome: !(v === 'home' && this.state.mode === 'explorer'),
+      stepN: st.n, stepTag: st.tag, stepTitle: st.title, stepDesc: st.desc,
+      menuOpen: this.state.menuOpen,
+      legalOpen: !!this.state.legal,
+      legalImpressum: this.state.legal === 'impressum',
+      legalDatenschutz: this.state.legal === 'datenschutz',
+      submitted: this.state.submitted, notSubmitted: !this.state.submitted,
+      confirmName: (f.name || '').trim() || 'gern',
+      canvasRef: this.canvasRef, dragRef: this.dragRef,
+      hs0: this.hsRefs[0], hs1: this.hsRefs[1], hs2: this.hsRefs[2], hs3: this.hsRefs[3], hs4: this.hsRefs[4],
+      sel0: this.sel0, sel1: this.sel1, sel2: this.sel2, sel3: this.sel3, sel4: this.sel4,
+      enterExplorer: this.enterExplorer, exitExplorer: this.exitExplorer, prevStep: this.prevStep, nextStep: this.nextStep,
+      onDragStart: this.onDragStart,
+      goHome: this.goHome, goAbout: this.goAbout, goTermin: this.goTermin,
+      toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
+      openImpressum: this.openImpressum, openDatenschutz: this.openDatenschutz,
+      closeLegal: this.closeLegal, stop: this.stop,
+      submit: this.submit, resetForm: this.resetForm,
+      onName: this.onName, onContact: this.onContact, onVehicle: this.onVehicle,
+      onService: this.onService, onDate: this.onDate, onMessage: this.onMessage, onConsent: this.onConsent,
+      fName: f.name, fContact: f.contact, fVehicle: f.vehicle, fService: f.service,
+      fDate: f.date, fMessage: f.message, fConsent: f.consent,
+      errName: er.name || '', errContact: er.contact || '', errVehicle: er.vehicle || '',
+      errService: er.service || '', errConsent: er.consent || ''
+    };
+  }
+}
+</script>
+</body>
+</html>
