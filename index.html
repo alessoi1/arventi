@@ -627,7 +627,7 @@ class Component extends DCLogic {
     const landing = this.state.mode === 'landing';
 
     if (landing) {
-      this.camTarget.az -= (this.reduced ? 0 : 0.0014);
+      this.camTarget.az -= dt * (this.reduced ? 0.05 : 0.1);
       this.camTarget.el = this.camLanding.el;
       this.camTarget.dist = this.camLanding.dist;
       this.camTarget.ty = this.camLanding.ty;
