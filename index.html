@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arventi · Auto Detailing Winterthur</title>
 <meta name="description" content="Arventi — Auto Detailing in Winterthur. Aussen- und Innenreinigung mit Handwäsche, Politur und Versiegelung.">
+<meta name="theme-color" content="#0b0c0e">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="mask-icon" href="assets/icons/safari-pinned-tab.svg" color="#b5892e">
+<link rel="manifest" href="site.webmanifest">
+<meta name="application-name" content="Arventi">
+<meta name="apple-mobile-web-app-title" content="Arventi">
+<meta name="msapplication-TileColor" content="#0b0c0e">
+<meta name="msapplication-config" content="browserconfig.xml">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -610,7 +622,7 @@ class Component extends DCLogic {
       this.three.group.add(m); this.three[key] = m;
       if (this.reduced || this.state.view !== 'home') this.renderOnce();
     }, undefined, (e) => console.warn('GLB load failed', e));
-    if (THREE.GLTFLoader) { loadCar('assets/car.glb', Math.PI / 2, 'glb'); loadCar('assets/car-open.glb', Math.PI, 'glbOpen'); loadCar('assets/car-wash.glb', Math.PI / 2, 'glbWash'); loadCar('assets/car-dirty.glb', -Math.PI / 2, 'glbDirty'); }
+    if (THREE.GLTFLoader) { loadCar('assets/car.glb', Math.PI / 2, 'glb'); loadCar('assets/car-open.glb', Math.PI, 'glbOpen'); loadCar('assets/car-wash.glb', Math.PI / 2, 'glbWash'); loadCar('assets/car-dirty.glb', Math.PI / 2, 'glbDirty'); }
 
     this.raf = requestAnimationFrame(this.animate);
   }
